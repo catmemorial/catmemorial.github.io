@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>猫猫天堂 - 纪念我的挚爱猫咪</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 0 1rem;
+        }
+
+        .intro p {
+            max-width: 800px;
+            margin: 0 auto 1rem;
+            font-size: 1.1rem;
+        }
+
+        .cat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .cat-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .cat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 20px -3px rgba(0, 0, 0, 0.15);
+        }
+
+        .cat-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .cat-info {
+            padding: 1.5rem;
+        }
+
+        .cat-name {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #444;
+        }
+
+        .cat-years {
+            color: #666;
+            font-style: italic;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .cat-description {
+            color: #555;
+            margin-bottom: 1rem;
+        }
+
+        .view-more {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 0.5rem 1rem;
+            margin: .5rem 0;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .view-more:hover {
+            background: #5a6fd5;
+        }
+
+        .media-gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .media-item {
+            border-radius: 5px;
+            overflow: hidden;
+            height: 100px;
+        }
+
+        .media-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .modal-media {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+            margin-bottom: 1rem;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .modal-nav {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 800px;
+            margin-top: 1rem;
+        }
+
+        .modal-nav button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .modal-nav button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .cat-detail {
+            display: none;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+        }
+
+        .detail-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .detail-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 2rem;
+        }
+
+        .detail-info h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .detail-media-item {
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            height: 200px;
+        }
+
+        .detail-media-item img, .detail-media-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .detail-media-item:hover img, .detail-media-item:hover video {
+            transform: scale(1.05);
+        }
+
+        .back-button {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #5a6fd5;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: #333;
+            color: white;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .cat-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+
+            .detail-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .detail-img {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cat-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .media-gallery {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>猫猫天堂</h1>
+    <p class="subtitle">纪念永远爱的小伙伴</p>
+</header>
+
+<div class="container">
+    <div class="intro">
+        <p>这里是为了纪念那些曾经给予无限爱和快乐的猫咪朋友而创建的地方。</p>
+        <p>虽然它们已经离开了我，但它们永远活在我的心中，<b>晚安小猫</b>。</p>
+    </div>
+
+    <div class="cat-grid" id="catGrid">
+        <!-- 大黄 -->
+        <div class="cat-card">
+            <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%A4%A7%E9%BB%84/%E5%A4%A7%E9%BB%84.jpg" alt="大黄" class="cat-image">
+            <div class="cat-info">
+                <h3 class="cat-name">大黄</h3>
+                <span class="cat-years">? - 2024年8月</span>
+                <p class="cat-description">大黄是一只非常有攻击性痞里痞气的歪嘴田园猫，是和花花一起混社会的大橘猫，混熟后也很爱撒娇。</p>
+                <div class="media-gallery">
+                    <div class="media-item">
+                        <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%A4%A7%E9%BB%84/PXL_20230424_050726845.jpg" alt="大黄照片1">
+                    </div>
+                    <div class="media-item">
+                        <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%A4%A7%E9%BB%84/PXL_20230423_013836273.jpg" alt="大黄照片2">
+                    </div>
+                </div>
+                <a href="#" class="view-more" onclick="showDetail('cat1'); return false;">查看更多</a>
+            </div>
+        </div>
+
+        <div class="cat-card">
+            <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%A4%A7%E7%9C%BC/%E5%A4%A7%E7%9C%BC1.jpg" alt="大眼" class="cat-image">
+            <div class="cat-info">
+                <h3 class="cat-name">大眼</h3>
+                <span class="cat-years">2023 - 2024年8月</span>
+                <p class="cat-description">大眼是一只橘白，是大黄生下的的第一窝小猫。</p>
+                <div class="media-gallery">
+                    <div class="media-item">
+                        <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%A4%A7%E7%9C%BC/%E5%A4%A7%E7%9C%BC1.jpg" alt="大眼照片1">
+                    </div>
+                    <div class="media-item">
+                        <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%A4%A7%E7%9C%BC/%E5%A4%A7%E7%9C%BC2.jpg" alt="大眼照片2">
+                    </div>
+                </div>
+                <a href="#" class="view-more" onclick="showDetail('cat2'); return false;">查看更多</a>
+            </div>
+        </div>
+
+        <div class="cat-card">
+            <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%B0%8F%E7%9C%BC/%E5%B0%8F%E7%9C%BCavatar.jpeg" alt="小眼" class="cat-image">
+            <div class="cat-info">
+                <h3 class="cat-name">小眼</h3>
+                <span class="cat-years">2023 - 2024年8月</span>
+                <p class="cat-description">小眼也是一只橘白，颜色比大眼略深，他是大黄的第一窝小猫，叫声尖尖的，想吃饭时会蹭人的腿。</p>
+                <div class="media-gallery">
+                    <div class="media-item">
+                        <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%B0%8F%E7%9C%BC/%E5%B0%8F%E7%9C%BC1.jpg" alt="小眼照片1">
+                    </div>
+                    <div class="media-item">
+                        <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%B0%8F%E7%9C%BC/%E5%B0%8F%E7%9C%BC3.jpg" alt="小眼照片2">
+                    </div>
+                </div>
+                <a href="#" class="view-more" onclick="showDetail('cat3'); return false;">查看更多</a>
+            </div>
+        </div>
+        <div class="cat-card">
+            <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%88%BA%E6%AF%9B/cimaoavatar.jpeg" alt="刺毛" class="cat-image">
+            <div class="cat-info">
+                <h3 class="cat-name">刺毛</h3>
+                <span class="cat-years">2023 - 2024年8月</span>
+                <p class="cat-description">刺毛是一只米色的橘猫，温柔可爱，喜欢抱着人和人撒娇。</p>
+                <div class="media-gallery">
+                    <div class="media-item">
+                        <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%88%BA%E6%AF%9B/2024-08-01+10.40.07.jpeg" alt="刺毛照片">
+                    </div>
+                    <div class="media-item">
+                        <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%88%BA%E6%AF%9B/2024-08-01+10.40.10.jpeg" alt="刺毛照片">
+                    </div>
+                </div>
+                <a href="#" class="view-more" onclick="showDetail('cat4'); return false;">查看更多</a>
+            </div>
+        </div>
+        <div class="cat-card">
+            <img src="https://backblaze.catmeow.me/file/catmemorial/%E7%8C%B4%E7%99%BD/%E7%8C%B4%E7%99%BD7.jpeg" alt="猴白" class="cat-image">
+            <div class="cat-info">
+                <h3 class="cat-name">猴白</h3>
+                <span class="cat-years">2024年3月 - 2025年3月28日</span>
+                <p class="cat-description">猴白是小白的第一窝小猫咪，是个软毛小白猫，有一双黄色的大眼睛，非常粘人，最喜欢靠在人胳膊上打盹，叫声娇娇的，会吃人的所有食物。</p>
+                <div class="media-gallery">
+                    <div class="media-item">
+                        <img src="https://backblaze.catmeow.me/file/catmemorial/%E7%8C%B4%E7%99%BD/%E7%8C%B4%E7%99%BD%E5%B0%8F.jpg" alt="猴白照片">
+                    </div>
+                    <div class="media-item">
+                        <img src="https://backblaze.catmeow.me/file/catmemorial/%E7%8C%B4%E7%99%BD/%E7%8C%B4%E7%99%BD9.jpeg" alt="猴白照片">
+                    </div>
+                </div>
+                <a href="#" class="view-more" onclick="showDetail('cat5'); return false;">查看更多</a>
+            </div>
+        </div>
+        <div class="cat-card">
+            <img src="https://backblaze.catmeow.me/file/catmemorial/%E4%B8%89%E8%8A%B1/%E4%B8%89%E8%8A%B1avatar.jpeg" alt="三花" class="cat-image">
+            <div class="cat-info">
+                <h3 class="cat-name">三花</h3>
+                <span class="cat-years">2024年3月 - 2025年3月29日</span>
+                <p class="cat-description">三花是小白的第一窝小猫，是个小花脸三花，会主动到腿上窝窝，如果人站起来要把它抱开还会喵喵叫，喜欢睡觉的时候窝在人身上。</p>
+                <div class="media-gallery">
+
+                    <div class="media-item">
+                        <img src="https://backblaze.catmeow.me/file/catmemorial/%E4%B8%89%E8%8A%B1/%E4%B8%89%E8%8A%B11.jpeg" alt="三花照片">
+                    </div>
+
+                    <div class="media-item">
+                        <img src="https://backblaze.catmeow.me/file/catmemorial/%E4%B8%89%E8%8A%B1/%E4%B8%89%E8%8A%B15.jpeg" alt="三花照片">
+                    </div>
+
+                </div>
+                <a href="#" class="view-more" onclick="showDetail('cat6'); return false;">查看更多</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 详细页面 -->
+    <div id="cat1" class="cat-detail">
+        <a href="#" class="back-button" onclick="hideDetail('cat1'); return false;">返回所有猫咪</a>
+        <div class="detail-header">
+            <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%A4%A7%E9%BB%84/%E5%A4%A7%E9%BB%84.jpg" alt="大黄" class="detail-img">
+            <div class="detail-info">
+                <h2>大黄</h2>
+                <p class="cat-years">? - 2024</p>
+                <p>大黄是一只非常有攻击性痞里痞气的歪嘴田园猫，是和花花一起混社会的一只大橘猫。经常到邻居家挑衅栓绳的看家狗，在我家车库里生了一窝小猫(大眼、小眼)，能独立生活后又带回了我家，后来又生了两只小猫，一只短毛灰猫，在一次我试图抓后勃颈时给我手咬了两个血窟窿被大黄带出家没再回来，另一只金色橘猫留在了家里名字是刺毛，最后又生了一窝5只小猫在邻居家，被搬到我家喂了一晚上奶粉，再还给了大黄，在迁移过程中一只小猫被路过的车碾死，大黄把他们都带到了自己居住的地方，后来把一只体弱的小猫(小可怜)送给了我，最后于2024年8月底和大眼小眼一起消失，查遍家里监控也没再见到。</p>
+            </div>
+        </div>
+        <h3>大黄的美好回忆</h3>
+        <div class="detail-grid">
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%A4%A7%E9%BB%84/PXL_20230424_050726845.jpg" alt="大黄照片1">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%A4%A7%E9%BB%84/PXL_20230423_013836273.jpg" alt="大黄照片2">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%A4%A7%E9%BB%84/1687273570148.jpg" alt="大黄照片3">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%A4%A7%E9%BB%84/PXL_20230423_013842258.MP.jpg" alt="大黄照片4">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%A4%A7%E9%BB%84/PXL_20230423_013846887.jpg" alt="大黄照片5">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%A4%A7%E9%BB%84/PXL_20230424_050731320.jpg" alt="大黄照片6">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%A4%A7%E9%BB%84/PXL_20231112_131758901.jpg" alt="大黄和他的第二窝小猫，灰毛和刺毛">
+            </div>
+        </div>
+    </div>
+
+    <div id="cat2" class="cat-detail">
+        <a href="#" class="back-button" onclick="hideDetail('cat2'); return false;">返回所有猫咪</a>
+        <div class="detail-header">
+            <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%A4%A7%E7%9C%BC/%E5%A4%A7%E7%9C%BC1.jpg" alt="大眼" class="detail-img">
+            <div class="detail-info">
+                <h2>大眼</h2>
+                <p class="cat-years">2023 - 2024</p>
+                <p>大眼是一只橘白，他是大黄的第一窝小猫，开始很怕人，大黄把他俩带回来之后投喂两台就开始粘人，不吝于表达对主人的喜爱，最后和大黄还有小眼、刺毛一起消失了。</p>
+            </div>
+        </div>
+        <h3>大眼的美好回忆</h3>
+        <div class="detail-grid">
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%A4%A7%E7%9C%BC/%E5%A4%A7%E7%9C%BC1.jpg" alt="大眼照片1">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%A4%A7%E7%9C%BC/%E5%A4%A7%E7%9C%BC2.jpg" alt="大眼照片2">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%A4%A7%E7%9C%BC/%E5%A4%A7%E7%9C%BC3.jpg" alt="大眼照片3">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%A4%A7%E7%9C%BC/%E5%A4%A7%E7%9C%BC4.jpg" alt="大眼照片4">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%A4%A7%E7%9C%BC/%E5%A4%A7%E7%9C%BC5.jpg" alt="大眼照片5">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%A4%A7%E7%9C%BC/%E5%A4%A7%E5%B0%8F%E7%9C%BC%E5%85%84%E5%BC%9F.jpg" alt="大小兄弟">
+            </div>
+
+            <div class="detail-media-item" onclick="openModal(this)">
+                <video controls>
+                    <source src="https://backblaze.catmeow.me/file/catmemorial/%E5%A4%A7%E7%9C%BC/%E5%A4%A7%E7%9C%BCV.mp4" type="video/mp4">
+                    您的浏览器不支持视频标签。
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <div id="cat3" class="cat-detail">
+        <a href="#" class="back-button" onclick="hideDetail('cat3'); return false;">返回所有猫咪</a>
+        <div class="detail-header">
+            <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%B0%8F%E7%9C%BC/%E5%B0%8F%E7%9C%BCavatar.jpeg" alt="小眼" class="detail-img">
+            <div class="detail-info">
+                <h2>小眼</h2>
+                <p class="cat-years">2023 - 2024</p>
+                <p>小眼也是一只橘白，颜色比大眼略深，他是大黄的第一窝小猫，开始很怕人，大黄把他俩带回来之后投喂两台就开始粘人(但是比他兄弟慢很多)，叫声尖尖的，想吃饭时会蹭人的腿，最后和大黄还有大眼、刺毛一起消失了。</p>
+            </div>
+        </div>
+        <h3>小眼的美好回忆</h3>
+        <div class="detail-grid">
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%B0%8F%E7%9C%BC/%E5%B0%8F%E7%9C%BC1.jpg" alt="小眼照片1">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%B0%8F%E7%9C%BC/%E5%B0%8F%E7%9C%BC2.jpg" alt="小眼照片2">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%B0%8F%E7%9C%BC/%E5%B0%8F%E7%9C%BC3.jpg" alt="小眼照片3">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%B0%8F%E7%9C%BC/%E5%B0%8F%E7%9C%BC4.jpg" alt="小眼照片4">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%A4%A7%E7%9C%BC/%E5%A4%A7%E5%B0%8F%E7%9C%BC%E5%85%84%E5%BC%9F.jpg" alt="大小眼兄弟">
+            </div>
+        </div>
+    </div>
+    <div id="cat4" class="cat-detail">
+        <a href="#" class="back-button" onclick="hideDetail('cat4'); return false;">返回所有猫咪</a>
+        <div class="detail-header">
+            <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%88%BA%E6%AF%9B/cimaoavatar.jpeg" alt="刺毛" class="detail-img">
+            <div class="detail-info">
+                <h2>刺毛</h2>
+                <p class="cat-years">2023 - 2024年8月</p>
+                <p>刺毛是一只米色的橘猫，温柔可爱，喜欢抱着人和人撒娇，和他一起的还有一个灰色的短毛小兄弟，咬了我之后就被大黄带走了，刺毛很喜欢晒太阳，经常躺在阳台的吊床上面晒太阳，很通人性，在楼上叫他的名字即使在楼下也能听到并来到身边，和大黄/大眼/小眼一起消失了。</p>
+            </div>
+        </div>
+        <h3>刺毛的美好回忆</h3>
+        <div class="detail-grid">
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%88%BA%E6%AF%9B/2024-08-01+10.40.07.jpeg" alt="刺毛照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%88%BA%E6%AF%9B/2024-08-01+10.40.10.jpeg" alt="刺毛照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%88%BA%E6%AF%9B/2024-08-01+10.40.33.jpeg" alt="刺毛照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%88%BA%E6%AF%9B/2024-08-01+10.40.36.jpeg" alt="刺毛照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%88%BA%E6%AF%9B/2024-08-01+10.40.39.jpeg" alt="刺毛照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%88%BA%E6%AF%9B/2024-08-01+10.41.02.jpeg" alt="刺毛照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%88%BA%E6%AF%9B/2024-08-01+10.41.06.jpeg" alt="刺毛照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%88%BA%E6%AF%9B/2024-08-01+10.41.39.jpeg" alt="刺毛照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%88%BA%E6%AF%9B/2024-08-01+10.42.35.jpeg" alt="刺毛照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%88%BA%E6%AF%9B/2024-08-01+10.42.43.jpeg" alt="刺毛照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%88%BA%E6%AF%9B/2024-08-01+10.42.49.jpeg" alt="刺毛照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%88%BA%E6%AF%9B/2024-08-01+10.42.58.jpeg" alt="刺毛照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%88%BA%E6%AF%9B/2024-08-01+10.43.00.jpeg" alt="刺毛照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%88%BA%E6%AF%9B/2024-08-01+10.43.02.jpeg" alt="刺毛照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%88%BA%E6%AF%9B/2024-08-01+10.46.01.jpeg" alt="刺毛照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%88%BA%E6%AF%9B/2024-08-01+10.46.38.jpeg" alt="刺毛照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%88%BA%E6%AF%9B/2024-08-01+10.46.46.jpeg" alt="刺毛照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%88%BA%E6%AF%9B/2024-08-01+10.47.56.jpeg" alt="刺毛照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E5%88%BA%E6%AF%9B/2024-08-01+10.48.36.jpeg" alt="刺毛照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/PXL_20231112_125714989.jpg" alt="刺毛照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)"><div class="vsc-controller"></div>
+                <video controls=""><source src="https://backblaze.catmeow.me/file/catmemorial/%E5%88%BA%E6%AF%9B/PXL_20240513_095914972.LS.mp4" type="video/mp4">您的浏览器不支持视频标签。</video>
+            </div>
+        </div>
+    </div>
+    <div id="cat5" class="cat-detail">
+        <a href="#" class="back-button" onclick="hideDetail('cat5'); return false;">返回所有猫咪</a>
+        <div class="detail-header">
+            <img src="https://backblaze.catmeow.me/file/catmemorial/%E7%8C%B4%E7%99%BD/%E7%8C%B4%E7%99%BD7.jpeg" alt="猴白" class="detail-img">
+            <div class="detail-info">
+                <h2>猴白</h2>
+                <p class="cat-years">2024年3月 - 2025年3月28日</p>
+                <p>猴白是小白的第一窝小猫咪，是个软毛小白猫，有一双黄色的大眼睛，非常粘人，最喜欢靠在人胳膊上打盹，叫声娇娇的，小的时候第一个爬到人的身上睡觉，做饭时也会一跳一跳地跳到腿上，而且作为一个小猫咪，人投喂的任何东西都会吃，会吃饼、香蕉、馒头、玉米、南瓜，总之只要是人类吃的食物都会吃，在2025年3月28日猫瘟急性发作，重度脱水，抽血只能抽出来一点血，补水打不进，白细胞低到1.0，抢救无效离开了，晚安小猫。</p>
+            </div>
+        </div>
+        <h3>猴白的美好回忆</h3>
+        <div class="detail-grid">
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E7%8C%B4%E7%99%BD/%E7%8C%B4%E7%99%BD1.jpeg" alt="猴白照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E7%8C%B4%E7%99%BD/%E7%8C%B4%E7%99%BD2.jpeg" alt="猴白照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E7%8C%B4%E7%99%BD/%E7%8C%B4%E7%99%BD3.jpeg" alt="猴白照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E7%8C%B4%E7%99%BD/%E7%8C%B4%E7%99%BD4.jpeg" alt="猴白照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E7%8C%B4%E7%99%BD/%E7%8C%B4%E7%99%BD5.jpeg" alt="猴白照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E7%8C%B4%E7%99%BD/%E7%8C%B4%E7%99%BD6.jpeg" alt="猴白照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E7%8C%B4%E7%99%BD/%E7%8C%B4%E7%99%BD7.jpeg" alt="猴白照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E7%8C%B4%E7%99%BD/%E7%8C%B4%E7%99%BD8.jpeg" alt="猴白照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E7%8C%B4%E7%99%BD/%E7%8C%B4%E7%99%BD9.jpeg" alt="猴白照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E7%8C%B4%E7%99%BD/%E7%8C%B4%E7%99%BD10.jpeg" alt="猴白照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E7%8C%B4%E7%99%BD/%E7%8C%B4%E7%99%BD%E9%AA%91%E8%84%B8.jpg" alt="猴白照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E7%8C%B4%E7%99%BD/%E7%8C%B4%E7%99%BD%E5%B0%8F.jpg" alt="猴白照片">
+            </div>
+            <div class="detail-media-item" onclick="openModal(this)"><div class="vsc-controller"></div>
+                <video controls=""><source src="https://backblaze.catmeow.me/file/catmemorial/%E7%8C%B4%E7%99%BD/2024-08-02+18.25.29.mov" type="video/mp4">您的浏览器不支持视频标签。</video>
+            </div>
+        </div>
+    </div>
+    <div id="cat6" class="cat-detail">
+        <a href="#" class="back-button" onclick="hideDetail('cat6'); return false;">返回所有猫咪</a>
+        <div class="detail-header">
+            <img src="https://backblaze.catmeow.me/file/catmemorial/%E4%B8%89%E8%8A%B1/%E4%B8%89%E8%8A%B1avatar.jpeg" alt="三花" class="detail-img">
+            <div class="detail-info">
+                <h2>三花</h2>
+                <p class="cat-years">2024年3月 - 2025年3月29日</p>
+                <p>三花是小白的第一窝小猫，是个小花脸三花，会主动到腿上窝窝，如果人站起来要把它抱开还会喵喵叫，喜欢睡觉的时候窝在人身上，猫瘟爆发五天前跑丢，三天后在库房找到，性情大变不认人，喂了两个罐头之后恢复了，抱回家第三天就发现开始发热食欲下降，在猴白离开第三天也因为脱水回到了喵星。</p>
+            </div>
+        </div>
+        <h3>三花的美好回忆</h3>
+        <div class="detail-grid">
+
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E4%B8%89%E8%8A%B1/%E4%B8%89%E8%8A%B11.jpeg" alt="三花照片">
+            </div>
+
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E4%B8%89%E8%8A%B1/%E4%B8%89%E8%8A%B12.jpeg" alt="三花照片">
+            </div>
+
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E4%B8%89%E8%8A%B1/%E4%B8%89%E8%8A%B13.jpeg" alt="三花照片">
+            </div>
+
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E4%B8%89%E8%8A%B1/%E4%B8%89%E8%8A%B14.jpeg" alt="三花照片">
+            </div>
+
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E4%B8%89%E8%8A%B1/%E4%B8%89%E8%8A%B15.jpeg" alt="三花照片">
+            </div>
+
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E7%8C%B4%E7%99%BD/%E7%8C%B4%E7%99%BD9.jpeg" alt="三花照片">
+            </div>
+
+            <div class="detail-media-item" onclick="openModal(this)">
+                <img src="https://backblaze.catmeow.me/file/catmemorial/%E4%B8%89%E8%8A%B1/%E4%B8%89%E8%8A%B1lastnight.jpg" alt="三花照片">
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- 模态框 -->
+<div id="mediaModal" class="modal" onclick="closeModal()">
+    <span class="modal-close">&times;</span>
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <img id="modalMedia" class="modal-media">
+        <div class="modal-nav">
+            <button id="prevBtn" onclick="changeMedia(-1)">上一张</button>
+            <button id="nextBtn" onclick="changeMedia(1)">下一张</button>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>猫猫天堂 © 2025 - 用爱与回忆纪念猫咪朋友</p>
+</footer>
+
+<script>
+    // 显示详情页
+    function showDetail(catId) {
+        document.getElementById('catGrid').style.display = 'none';
+        document.getElementById(catId).style.display = 'block';
+        document.querySelector('.intro').style.display = 'none';
+        window.scrollTo(0, 0);
+    }
+
+    // 隐藏详情页
+    function hideDetail(catId) {
+        document.getElementById('catGrid').style.display = 'grid';
+        document.getElementById(catId).style.display = 'none';
+        document.querySelector('.intro').style.display = 'block';
+    }
+
+    // 当前查看的媒体集合和索引
+    let currentMedias = [];
+    let currentIndex = 0;
+
+    // 打开模态框
+    function openModal(element) {
+        const modal = document.getElementById('mediaModal');
+        const modalMedia = document.getElementById('modalMedia');
+        const parent = element.parentElement;
+
+        // 获取当前页面的所有媒体元素
+        currentMedias = Array.from(parent.querySelectorAll('.detail-media-item img, .detail-media-item video'));
+        currentIndex = currentMedias.indexOf(element.querySelector('img') || element.querySelector('video'));
+
+        // 设置当前媒体
+        updateModalMedia();
+
+        // 显示模态框
+        modal.style.display = 'flex';
+    }
+
+    // 更新模态框中的媒体
+    function updateModalMedia() {
+        const modalMedia = document.getElementById('modalMedia');
+        const currentElement = currentMedias[currentIndex];
+
+        if (currentElement.tagName.toLowerCase() === 'video') {
+            // 如果是视频，创建视频元素
+            const video = document.createElement('video');
+            video.src = currentElement.src;
+            video.controls = true;
+            video.className = 'modal-media';
+
+            // 替换现有的媒体元素
+            modalMedia.parentNode.replaceChild(video, modalMedia);
+        } else {
+            // 如果是图片，设置图片路径
+            modalMedia.src = currentElement.src;
+            modalMedia.alt = currentElement.alt;
+        }
+    }
+
+    // 关闭模态框
+    function closeModal() {
+        document.getElementById('mediaModal').style.display = 'none';
+    }
+
+    // 切换媒体
+    function changeMedia(direction) {
+        currentIndex += direction;
+
+        // 循环浏览
+        if (currentIndex < 0) {
+            currentIndex = currentMedias.length - 1;
+        } else if (currentIndex >= currentMedias.length) {
+            currentIndex = 0;
+        }
+
+        updateModalMedia();
+    }
+
+    // 添加新猫咪的函数
+    function addNewCat(catData) {
+        const catGrid = document.getElementById('catGrid');
+
+        // 创建新的猫咪卡片
+        const catCard = document.createElement('div');
+        catCard.className = 'cat-card';
+
+        // 设置卡片内容
+        catCard.innerHTML = `
+                <img src="${catData.image}" alt="${catData.name}" class="cat-image">
+                <div class="cat-info">
+                    <h3 class="cat-name">${catData.name}</h3>
+                    <span class="cat-years">${catData.years}</span>
+                    <p class="cat-description">${catData.description}</p>
+                    <div class="media-gallery">
+                        ${catData.gallery.map(item => `
+                            <div class="media-item">
+                                <img src="${item}" alt="${catData.name}照片">
+                            </div>
+                        `).join('')}
+                    </div>
+                    <a href="#" class="view-more" onclick="showDetail('${catData.id}'); return false;">查看更多</a>
+                </div>
+            `;
+
+        // 添加到网格
+        catGrid.appendChild(catCard);
+
+        // 创建详情页
+        const catDetail = document.createElement('div');
+        catDetail.id = catData.id;
+        catDetail.className = 'cat-detail';
+
+        // 设置详情页内容
+        catDetail.innerHTML = `
+                <a href="#" class="back-button" onclick="hideDetail('${catData.id}'); return false;">返回所有猫咪</a>
+                <div class="detail-header">
+                    <img src="${catData.image}" alt="${catData.name}" class="detail-img">
+                    <div class="detail-info">
+                        <h2>${catData.name}</h2>
+                        <p class="cat-years">${catData.years}</p>
+                        <p>${catData.fullDescription}</p>
+                    </div>
+                </div>
+                <h3>${catData.name}的美好回忆</h3>
+                <div class="detail-grid">
+                    ${catData.detailMedia.map(item => `
+                        <div class="detail-media-item" onclick="openModal(this)">
+                            ${item.type === 'image'
+            ? `<img src="${item.src}" alt="${catData.name}照片">`
+            : `<video controls><source src="${item.src}" type="video/mp4">您的浏览器不支持视频标签。</video>`
+        }
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+        // 添加到容器
+        document.querySelector('.container').appendChild(catDetail);
+    }
+
+    // 示例：如何添加新猫咪
+    /*
+    addNewCat({
+        id: 'cat4',
+        name: '奶油',
+        years: '2019 - 2024',
+        description: '奶油是一只米色的布偶猫，温柔可爱，喜欢被抱着。',
+        fullDescription: '奶油是一只米色的布偶猫，温柔可爱，喜欢被抱着。她有着漂亮的蓝眼睛和柔软的长毛，每次抚摸她都像在摸云一样。奶油非常粘人，总是要跟着主人，不让主人离开她的视线。她喜欢坐在窗台上看外面的鸟儿，偶尔会发出可爱的叫声。',
+        image: '/api/placeholder/400/320',
+        gallery: [
+            '/api/placeholder/400/320',
+            '/api/placeholder/400/320'
+        ],
+        detailMedia: [
+            { type: 'image', src: '/api/placeholder/400/320' },
+            { type: 'image', src: '/api/placeholder/400/320' },
+            { type: 'image', src: '/api/placeholder/400/320' },
+            { type: 'video', src: '视频链接地址' }
+        ]
+    });
+    */
+</script>
+</body>
+</html>
